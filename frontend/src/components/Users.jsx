@@ -2,19 +2,21 @@ import { useEffect, useState } from "react"
 import { Button } from "./Button"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDebounce } from "../hooks/useDebounce";
 const id =1;
 export const Users = () => {
     
-    // add debouncing here 
-
     const [users, setUsers] = useState([]);
     const [filter, setFilter] =useState("");
+
+    const debounce = useDebounce(filter, 400)
+
     useEffect(()=>{
-        axios.get("http://localhost:3000/api/v1/user/bulk?filter="+ filter).
+        axios.get("http://localhost:3000/api/v1/user/bulk?filter="+ debounce).
         then(response=>{
             setUsers(response.data.user)
         })
-    }, [filter])
+    }, [debounce])
 
     return <>
         <div className="font-bold mt-6 text-lg">
@@ -42,7 +44,7 @@ function User({user}) {
             </div>
             <div className="flex flex-col justify-center h-ful">
                 <div>
-                        {user.firsname}  {user.lastname}
+                        {user.firstname}  {user.lastname}
                 </div>
             </div>
         </div>
